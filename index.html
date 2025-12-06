@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SALA DE SINAIS ONLINE AVIATOR</title>
+  <style>
+    :root{
+      --bg-1:#04071a; --bg-2:#001f3f; --neon-cyan:#00f0d6; --neon-blue:#0093ff;
+      --accent:#ff6b00; --glass: rgba(255,255,255,0.04);
+      --azul:#0b5c8a; --roxo:#5b2b9634688a; --rosa:#c2185b;
+      --card:#031228;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, Poppins, system-ui, -apple-system, "Segoe UI", Roboto, Arial;color:#e6f7ff;background:radial-gradient(circle at 10% 10%, var(--bg-2) 0%, var(--bg-1) 40%, #000 100%);}
+    body{display:flex;flex-direction:column;align-items:center;padding:20px;overflow-x:hidden;}
+
+    .wrap{Width:100%;max-width:980px;}
+    header{text-align:center;margin-bottom:14px;}
+    header h1{margin:0;font-size:30px;background:linear-gradient(90deg,var(--neon-cyan),var(--neon-blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:glowTitle 2s infinite alternate}
+    @keyframes glowTitle{from{text-shadow:0 0 8px rgba(0,255,255,0.25)}to{text-shadow:0 0 22px rgba(0,255,255,0.8)}}
+    header p.lead{margin:8px 0 0;color:#bcdff3;opacity:.95;font-size:14px}
+
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(0,255,230,0.06);padding:18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.6),0 0 35px rgba(0,160,200,0.05);backdrop-filter:blur(6px);}
+
+    .intro{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .intro .txt{max-width:66%;text-align:left}
+    .intro h2{margin:0;color:var(--neon-cyan);font-size:16px}
+    .intro p{margin:6px 0 0;color:#d4eef7;opacity:.95;font-size:13px}
+
+    .actions{display:flex;gap:12px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+    .btn{border:0;padding:12px 18px;border-radius:12px;font-weight:800;cursor:pointer;color:#fff;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,0.6);transition:transform .12s ease,box-shadow .12s ease}
+    .btn:active{transform:translateY(1px)}
+    .btn-register{background:linear-gradient(90deg,#ff7a1f,#ff3b1f);box-shadow:0 6px 22px rgba(255,90,20,0.28),0 0 40px rgba(255,80,20,0.2);animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{box-shadow:0 0 14px rgba(255,90,20,0.6),0 0 30px rgba(255,90,20,0.4)}50%{box-shadow:0 0 30px rgba(255,110,40,1),0 0 70px rgba(255,110,40,0.8)}}
+    .btn-vip{background:linear-gradient(90deg,#00bfa5,#00e5ff);box-shadow:0 6px 18px rgba(0,200,200,0.25),0 0 30px rgba(0,200,255,0.15)}
+
+    .board{margin-top:18px;display:flex;gap:16px;flex-direction:column}
+    .status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .timer{color:var(--neon-cyan);font-weight:800;font-size:14px}
+    .note{color:#ffdcdc;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);font-size:13px}
+
+    .online{display:flex;align-items:center;gap:8px;font-weight:700;color:#bfffe6}
+    .online .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(90deg,#2ff0c9,#00bfa5);box-shadow:0 0 8px rgba(0,255,200,0.25)}
+
+    .signals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:8px}
+    .tile{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(0,255,230,0.04);box-shadow:0 6px 20px rgba(0,0,0,0.6);min-height:96px;display:flex;flex-direction:column;justify-content:center;gap:8px;transition:transform .18s ease,box-shadow .18s ease;position:relative;overflow:hidden}
+    .tile .time{font-weight:800;font-size:16px;color:#e6f7ff;z-index:2}
+    .pred{display:flex;gap:8px;align-items:center;justify-content:center;font-size:13px;font-weight:800;padding:8px 12px;border-radius:999px;color:#fff;z-index:2;box-shadow:0 6px 16px rgba(0,0,0,0.6)}
+    .pred.azul{background:linear-gradient(90deg,#0b5c8a,#009bd2);animation:neonAzul 2.2s infinite alternate}
+    .pred.roxo{background:linear-gradient(90deg,#5b2b8a,#8c3cb4);animation:neonRoxo 2.4s infinite alternate}
+    .pred.rosa{background:linear-gradient(90deg,#c2185b,#f04696);animation:neonRosa 2s infinite alternate}
+
+    @keyframes neonAzul{from{filter:drop-shadow(0 0 8px rgba(0,155,210,0.45))}to{filter:drop-shadow(0 0 20px rgba(0,200,255,0.85))}}
+    @keyframes neonRoxo{from{filter:drop-shadow(0 0 8px rgba(140,60,180,0.35))}to{filter:drop-shadow(0 0 20px rgba(180,90,220,0.75))}}
+    @keyframes neonRosa{from{filter:drop-shadow(0 0 8px rgba(240,70,150,0.35))}to{filter:drop-shadow(0 0 20px rgba(255,90,160,0.85))}}
+
+    .legend{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+    .legend .item{font-size:13px;padding:8px 12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+    .aviso{margin-top:14px;color:#ff8b8b;font-weight:700;font-size:13px;text-align:center}
+    footer{margin-top:18px;color:#9fbcd6;font-size:13px;text-align:center}
+
+    .popup{position:fixed;left:20px;bottom:20px;background:rgba(0,0,0,0.85);color:#bfffe6;padding:12px 18px;border-radius:12px;font-weight:700;box-shadow:0 0 20px rgba(0,255,200,0.2);z-index:9999;animation:popupAnim 6s ease forwards}
+    @keyframes popupAnim{0%{opacity:0;transform:translateY(20px)}10%,80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-10px)}}
+
+    /* modal registro central */
+    .register-modal {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.98);
+      width: min(680px, 92%); max-width:680px; background: linear-gradient(180deg, rgba(6,10,20,0.98), rgba(10,16,30,0.98));
+      border: 1px solid rgba(0,255,220,0.08); padding: 18px; border-radius: 14px; z-index: 10000;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(0,160,200,0.06);
+      display: none; align-items:stretch; gap:12px; animation:modalIn .35s ease forwards;
+    }
+    @keyframes modalIn { from { opacity:0; transform: translate(-50%,-50%) scale(.94) } to { opacity:1; transform: translate(-50%,-50%) scale(1) } }
+    .register-modal.show { display:flex; flex-direction:column; }
+
+    .register-modal .head { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .register-modal h3 { margin:0; color:var(--neon-cyan); font-size:18px; }
+    .register-modal p { margin:8px 0 0; color:#d4eef7; opacity:.95; font-size:14px; line-height:1.3; }
+    .register-actions { display:flex; gap:12px; align-items:center; margin-top:12px; justify-content:flex-end; }
+    .register-cta { background:linear-gradient(90deg,#ff7a1f,#ff3b1f); border:0; padding:12px 16px; color:#fff; font-weight:800; border-radius:10px; cursor:pointer; box-shadow:0 8px 30px rgba(255,100,40,0.12); text-decoration:none; }
+    .register-close { background:transparent; border:0; color:#cfeff0; font-weight:800; cursor:pointer; font-size:16px; }
+
+    @media(max-width:560px){
+      .intro .txt{max-width:100%}
+      .actions{justify-content:center;width:100%}
+      .tile{min-height:80px;padding:10px}
+      .register-modal{width:94%}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>🚀 SALA DE SINAIS ONLINE AVIATOR</h1>
+      <p class="lead">Sinais automáticos 24/7 • Atualização a cada 1 minuto</p>
+    </header>
+
+    <section class="panel">
+      <div class="intro">
+        <div class="txt">
+          <h2>📣 Caro jogador</h2>
+          <p>Para garantir acesso total aos sinais, crie sua conta na plataforma recomendada. Se já possui, aguarde os sinais abaixo.</p>
+        </div>
+
+        <div class="actions">
+  <div class="online" title="Pessoas online">
+    <span class="dot"></span>
+    <span id="onlineCount">-- pessoas online</span>
+  </div>
+
+  <!-- ✅ Corrigido: aspas internas simples -->
+  <button class="btn btn-register" onclick="location.href='https://txunaplay.com/tede4f41e'">🔥 Criar Conta</button>
+
+  <!-- ✅ Mantido igual, abre grupo em nova aba -->
+  <button class="btn btn-vip" onclick="window.open('https://chat.whatsapp.com/L3QOLrovAxyKvtNedXmp8P?mode=wwt','_blank')">💬 Grupo VIP</button>
+</div>
+  </div>
+
+      <div class="board">
+        <div class="status-row">
+          <div class="timer" id="proximo">⏳ Próximo sinal em 60s</div>
+          <div class="note">🔔 Novos sinais automáticos a cada minuto</div>
+        </div>
+
+        <h3 style="color:var(--neon-cyan);margin:6px 0 8px;">📊 Entradas Confirmadas</h3>
+        <div class="signals-grid" id="grid"></div>
+
+        <div class="legend">
+          <div class="item">💙 Azul — 1.00X a 1.99X</div>
+          <div class="item">💜 Roxo — 2.00X a 9.99X</div>
+          <div class="item">🌹 Rosa — 10.00X a ∞ (80% entre 10–30X)</div>
+        </div>
+
+        <div class="aviso">⚠️ Conteúdo de demonstração — ganhos mostrados são simulados. Jogue com responsabilidade.</div>
+      </div>
+    </section>
+
+    <footer>
+      © 2025 - Todos os direitos reservados a <strong>DIGITAL G</strong>.<br> Sistema desenvolvido por <strong>DIGITAL G</strong>.
+    </footer>
+  </div>
+
+  <!-- Modal de registo central -->
+  <div id="registerModal" class="register-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="head">
+      <div>
+        <h3>⚠️ Caro jogador</h3>
+        <p>Se ainda não criou uma conta nova, crie imediatamente e comece a faturar (modo de demonstração).</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button id="closeModalBtn" class="register-close" aria-label="Fechar">✕</button>
+      </div>
+    </div>
+
+    <div class="register-actions">
+      <a id="modalCreateBtn" class="register-cta" href="https://txunaplay.com/tede4f41e" target="_blank" rel="noopener">🔥 Criar Conta</a>
+    </div>
+  </div>
+
+  <script>
+    /***** CONFIG *****/
+    const TILES = 3;
+    const INTERVAL_SECONDS = 60;       // atualizações dos sinais
+    const POPUP_INTERVAL_MS = 30000;   // 30s - popups simulados
+    const REGISTER_INTERVAL_MS = 80000; // 80s - modal registro
+    const REGISTER_DURATION_MS = 20000; // 20s - modal dura se não fechar
+    const ONLINE_MIN = 300;
+    const ONLINE_MAX = 500;
+
+    /***** ELEMENTS ******/
+    const grid = document.getElementById('grid');
+    const proximoEl = document.getElementById('proximo');
+    const onlineEl = document.getElementById('onlineCount');
+    const registerModal = document.getElementById('registerModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalCreateBtn = document.getElementById('modalCreateBtn');
+
+    /***** LISTA DE NOMES (~200) - lusófonos / Moçambique e PT ******/
+    const nomes = [
+"António","João","Maria","José","Ana","Carlos","Carla","Miguel","Inês","Paulo","Rita","Sofia","Tiago","Sara","Bruno","Beatriz","Nelson","Fátima","Rosa","Manuel",
+"Luís","Helena","Eduardo","Daniela","Marco","Susana","Jorge","Vera","Pedro","Margarida","Alexandre","Catarina","Vasco","Lúcia","Nuno","Luciana","Rui","Sónia","Vítor","Marisa",
+"Fernando","Elsa","Joaquim","Tânia","Armando","Lília","Hélder","Célia","Renato","Gabriela","Otávio","Patrícia","Adriano","Milena","Ricardo","Clarisse","Hugo","Leonor","Afonso","Olívia",
+"Samuel","Diana","Ângelo","Ângela","Mário","Mónica","Fábio","Lourdes","Emanuel","Noémia","Guilherme","Carmem","Baltazar","Nazaré","Zé","Filipe","Priscila","Rodrigo","Luzia","Amílcar",
+"Kátia","Vera-Lúcia","Fausto","Ester","Gonçalo","Naira","Isabel","Germano","Natália","Ronaldo","Salomão","Samira","Tito","Bárbara","Eurico","Júlia","Dário","Yara","Célio","Mauro",
+"Neuza","Zita","Lourenço","Camila","Joaquina","Lídia","Micaela","César","Gilberto","Raquel","Orlando","Brígida","Aline","Valentim","Álvaro","Sidónio","Estela","Delfina","Amélia","Geraldo",
+"Jasmim","Rúben","Madalena","Renata","Patrocinio","Ester","Valéria","Cleber","Benedita","Isidro","Milton","Sílvia","Tadeu","Miranda","Nilo","Sérgio","Eloísa","Helga","Romão","Adelaide",
+"Musa","Zuleica","Bento","Fabrício","Dalila","Américo","Jacinta","Anabela","Ricarda","Eduarda","Nélio","Rosário","Cândido","Gina","Venceslau","Neide","Elias","Klaus","Elisa","Bernardo",
+"Ivone","Arlindo","Gisela","Hilário","Márcio","Leila","Célestino","Jair","Lina","Gustavo","Ermelinda","Alda","Samira","Leandro","Violeta","Mauro2","Albina","Zulmira","Nataniel",
+"Doroteia","Raimundo","Florinda","Ciro","Lívia","Sadiq","Mirtes","Gregório","Aureliano","Nair","Hermínia","Osmar","Belmira","Edison","Jadson","Mariana","Tomas","Florêncio","Adão","Bárbara2",
+"Marcelo","Lília2","Safira","Rómulo","Eunice","Antero","Noé","Lourença","Micael","Alda2","Silas","Odete","Gonçalves","Marta","Duarte","Arlete","Joana","Baltazar2","Olavo","Célia2",
+"Nélson2","Bruno2","Sónia2","Flávio","Marilda","Hélio","Ilza","Joaquim2","Rute","Telmo","Nuno2","Cláudia","Fabrício2","Mafalda","Célio2","Amélia2","Vicente","Raul","Tânia2","Eunara",
+"Arnaldo","Cidália","Gonçala","Rafael","Amira","Tadeu2","Rómana","Vitor","Simão","Ester2","Jorge2","Ilda","Rogério","Teresa","Félix","Selma","Froilão","Bianca","Mauro3","Nazaré2",
+"Filipe2","Adelaide2","Zé2","Priscila2","Guilhermino","Júlio","Betina","Dinis","Catarina2","Noémia2","Adérito","Zina","Celso","Marisa2","Renée","Alberto","Belina","Vânia","Arlindo2","Célia3"
+    ];
+
+    // Ensure at least 200 unique names (if shorter, we can duplicate with suffixes)
+    let uniqueNomes = Array.from(new Set(nomes));
+    while (uniqueNomes.length < 200) {
+      uniqueNomes = uniqueNomes.concat(uniqueNomes.map((n,i)=> n + (Math.floor(i/uniqueNomes.length)+1)));
+      uniqueNomes = Array.from(new Set(uniqueNomes));
+    }
+    uniqueNomes = uniqueNomes.slice(0, 200);
+
+    /***** HELPERS ******/
+    const rand = (min, max) => Math.random() * (max - min) + min;
+    const randFixed = (min, max, dec = 2) => (rand(min, max)).toFixed(dec);
+    const choose = arr => arr[Math.floor(Math.random()*arr.length)];
+    const shuffle = arr => arr.slice().sort(()=>Math.random()-0.5);
+
+    /***** REGRAS DE PREVISÃO ******/
+    // Azul: 1.00 - 1.99
+    // Roxo: 2.00 - 9.99
+    // Rosa: 80% entre 10.00 - 30.00, 20% acima
+    function gerarPrevisaoPorTipo(tipo){
+      if(tipo === 'Azul') return { tipo, emoji: '💙', classe: 'azul', valor: Number(randFixed(1.00, 1.99)) };
+      if(tipo === 'Roxo') return { tipo, emoji: '💜', classe: 'roxo', valor: Number(randFixed(2.00, 9.99)) };
+      // Rosa
+      let valor;
+      if (Math.random() < 0.8) valor = Number(randFixed(10.00, 30.00));
+      else valor = Number(randFixed(30.01, 9999.99)); // simbólico infinito
+      return { tipo, emoji: '🌹', classe: 'rosa', valor };
+    }
+
+    /***** PREENCHER GRID: garante 3 tipos diferentes ******/
+    function preencherGrid(){
+      grid.innerHTML = '';
+      const agora = new Date();
+      const tipos = shuffle(['Azul','Roxo','Rosa']).slice(0, TILES);
+      tipos.forEach((tipo, i) => {
+        const dt = new Date(agora.getTime() + i * INTERVAL_SECONDS * 1000);
+        const previsao = gerarPrevisaoPorTipo(tipo);
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.innerHTML = `
+          <div class="time">${dt.toLocaleTimeString('pt-BR',{hour12:false})}</div>
+          <div class="pred ${previsao.classe}">
+            <span>${previsao.emoji} ${previsao.tipo}</span>
+            <span style="opacity:.95;margin-left:8px;font-weight:800">• ${previsao.valor}X</span>
+          </div>
+        `;
+        grid.appendChild(tile);
+      });
+    }
+
+    /***** CONTADOR DO PRÓXIMO SINAL ******/
+    function iniciarContador(){
+      setInterval(()=>{
+        const s = new Date().getSeconds();
+        const restante = INTERVAL_SECONDS - s;
+        proximoEl.textContent = `⏳ Próximo sinal em ${restante}s`;
+      }, 1000);
+    }
+
+    /***** ONLINE COUNT DINÂMICO ******/
+    let currentOnline = Math.floor(rand(ONLINE_MIN, ONLINE_MAX+1));
+    function atualizarOnline(){
+      const delta = Math.floor(rand(-12, 13));
+      currentOnline = Math.max(ONLINE_MIN, Math.min(ONLINE_MAX, currentOnline + delta));
+      onlineEl.textContent = `${currentOnline} pessoas online`;
+      setTimeout(atualizarOnline, Math.floor(rand(3000, 8000)));
+    }
+
+    /***** POPUPS SIMULADOS A CADA 30s ******/
+    function mostrarPopupSimulado(){
+      const nome = choose(uniqueNomes);
+      // mais probabilidade de Rosa/Roxo para aparência de "grandes ganhos"
+      const tipo = (Math.random() < 0.6) ? (Math.random() < 0.7 ? 'Rosa' : 'Roxo') : 'Azul';
+      const previsao = gerarPrevisaoPorTipo(tipo);
+
+      // calcular stake para garantir ganho >= 2000
+      const minStake = Math.max(1, Math.ceil(2000 / previsao.valor));
+      const stake = Math.floor(rand(minStake, Math.max(minStake+1, minStake*4)));
+      const ganho = stake * previsao.valor;
+
+      const ganhoFmt = ganho.toLocaleString('pt-MZ', {minimumFractionDigits:2, maximumFractionDigits:2});
+      const stakeFmt = stake.toLocaleString('pt-MZ', {minimumFractionDigits:2, maximumFractionDigits:2});
+      const multFmt = previsao.valor.toFixed(2);
+
+      const textos = [
+        `🎯 ${nome} simulou um ganho de ${ganhoFmt} MT em modo de demonstração (${previsao.emoji} ${multFmt}X)`,
+        `💸 ${nome} testou o sinal ${previsao.emoji} ${multFmt}X e obteve ${ganhoFmt} MT (simulado)`,
+        `🔥 Em demonstração: ${nome} entrou com ${stakeFmt} MT e saiu com ${ganhoFmt} MT — ${multFmt}X`,
+        `🏆 Resultado simulado: ${nome} +${ganhoFmt} MT (${previsao.emoji} ${multFmt}X)`,
+        `✅ Demonstração: ${nome} lucrou ${ganhoFmt} MT com ${previsao.emoji} ${multFmt}X`
+      ];
+      const texto = choose(textos);
+
+      const popup = document.createElement('div');
+      popup.className = 'popup';
+      popup.textContent = texto;
+      document.body.appendChild(popup);
+      setTimeout(()=> popup.remove(), 6000);
+    }
+
+    /***** MODAL DE REGISTO A CADA 80s ******/
+    let registerTimer = null;
+    let registerAutoCloseTimer = null;
+
+    function showRegisterModal(){
+      // show
+      registerModal.classList.add('show');
+      registerModal.setAttribute('aria-hidden','false');
+
+      // auto close after REGISTER_DURATION_MS
+      if (registerAutoCloseTimer) clearTimeout(registerAutoCloseTimer);
+      registerAutoCloseTimer = setTimeout(hideRegisterModal, REGISTER_DURATION_MS);
+    }
+
+    function hideRegisterModal(){
+      registerModal.classList.remove('show');
+      registerModal.setAttribute('aria-hidden','true');
+      if (registerAutoCloseTimer){ clearTimeout(registerAutoCloseTimer); registerAutoCloseTimer = null; }
+    }
+
+    closeModalBtn.addEventListener('click', hideRegisterModal);
+    // modal create button already points to link (target _blank)
+
+    function startRegisterCycle(){
+      // show first after small delay so page doesn't show modal imediatamente
+      setTimeout(showRegisterModal, 5000);
+      registerTimer = setInterval(showRegisterModal, REGISTER_INTERVAL_MS);
+    }
+
+    /***** INICIALIZAÇÃO E INTERVALS ******/
+    preencherGrid();
+    iniciarContador();
+    atualizarOnline();
+
+    // atualiza grid a cada INTERVAL_SECONDS (1m)
+    setInterval(preencherGrid, INTERVAL_SECONDS * 1000);
+    // popups simulados a cada 30s
+    setInterval(mostrarPopupSimulado, POPUP_INTERVAL_MS);
+    // mostra primeiro popup após 6s para atividade
+    setTimeout(mostrarPopupSimulado, 6000);
+
+    // iniciar ciclo do modal de registro
+    startRegisterCycle();
+
+    // segurança: limpar timers ao fechar a página (boas práticas)
+    window.addEventListener('beforeunload', () => {
+      if (registerTimer) clearInterval(registerTimer);
+    });
+  </script>
+</body>
+</html>
